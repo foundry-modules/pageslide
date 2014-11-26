@@ -1,7 +1,5 @@
 $.fn.pageslide = function(content, direction) {
 
-    clearTimeout(this.data("pageslide-reset"));
-
     var viewport = this.find(".pageslide-viewport"),
 
         page =
@@ -12,28 +10,28 @@ $.fn.pageslide = function(content, direction) {
                 // Insert page to viewport
                 [direction=="prev" ? "prependTo" : "appendTo"](viewport)
 
-                // Remove active class from siblings
+                // Get all siblings
                 .siblings()
+
+                // Immediately detach page that are already deactivating
+                .filter(".is-deactivating")
+                .detach()
+                .end()
+
+                // Add is-deactivating state to remaining siblings
+                .addClass("is-deactivating")
+
+                // And remove its active class
                 .removeClass("active")
                 .end();
 
         // Get container and switch class
-        container =
-            this.switchClass("fx-" + direction);
+        container = this.switchClass("fx-" + direction);
 
-    // Reset
-    this.data("pageslide-reset",
         setTimeout(function(){
-
-            container
-                .switchClass("fx-reset")
-                .removeClassAfter("fx-reset");
-
-            // Detach inactive pages
+            container.removeClass("fx-prev fx-next");
             page.siblings().detach();
-
-        }, 500)
-    );
+        }, 500);
 
     return this;
 };
