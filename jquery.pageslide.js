@@ -25,12 +25,15 @@ $.fn.pageslide = function(content, direction) {
                 .removeClass("active")
                 .end();
 
+        viewport.trigger("pageslidestart");
+
         // Get container and switch class
         container = this.switchClass("fx-" + direction);
 
         setTimeout(function(){
             container.removeClass("fx-prev fx-next");
             page.siblings().detach();
+            viewport.trigger("pageslidestop");
         }, 500);
 
     return this;
